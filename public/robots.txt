@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /vendor/
+
+# Optional: block other common sensitive routes/files
+Disallow: /.env
+Disallow: /.git
+Disallow: /composer.json
+Disallow: /composer.lock
+

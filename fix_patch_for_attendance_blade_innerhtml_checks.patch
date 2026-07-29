@@ -1,0 +1,243 @@
+const student = studentsData.find(s => s.id == currentStudentId);
+  const isComplete = isGradingComplete(student);
+  document.getElementById('modalTitle').textContent = 'Grading Breakdown';
+  const modalBody = document.getElementById('modalBody');
+  if (modalBody) {
+    modalBody.innerHTML = `
+      <table>
+        <thead>
+=======
+function resetModalToGradingBreakdown() {
+  const student = studentsData.find(s => s.id == currentStudentId);
+  const isComplete = isGradingComplete(student);
+  const modalTitle = document.getElementById('modalTitle');
+  if (modalTitle) modalTitle.textContent = 'Grading Breakdown';
+  const modalBody = document.getElementById('modalBody');
+  if (modalBody) {
+    modalBody.innerHTML = `
+      <table>
+        <thead>
+>>>>>>> REPLACE
+```
+
+```
+<<<<<<< SEARCH
+function showGradingForComponent(component) {
+  const componentNames = {
+    quiz: 'Quiz',
+    assignment: 'Assignment',
+    attendance_score: 'Attendance',
+    exam: 'Exam',
+    performance: 'Performance'
+  };
+  const student = studentsData.find(s => s.id == currentStudentId);
+  document.getElementById('modalTitle').textContent = `${componentNames[component]} Grading for ${student.name}`;
+  const modalBody = document.getElementById('modalBody');
+  modalBody.innerHTML = `
+    <button class="btn" onclick="resetModalToGradingBreakdown()">Back to Grading Breakdown</button>
+    <table style="margin-top: 10px;">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Total Items</th>
+          <th>Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${student.name || 'N/A'}</td>
+          <td><input type="number" placeholder="Total" value="${student[`total_${component}`] || (component === 'quiz' || component === 'exam' || component === 'attendance_score' ? '100' : '')}" /></td>
+          <td><input type="number" placeholder="Score" value="${student[component] || ''}" min="0" max="100" data-student-id="${student.id}" data-component="${component}" /></td>
+          <td><button class="btn" onclick="saveScoreFromModal('${student.id}', '${component}', this)">Save</button></td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+=======
+function showGradingForComponent(component) {
+  const componentNames = {
+    quiz: 'Quiz',
+    assignment: 'Assignment',
+    attendance_score: 'Attendance',
+    exam: 'Exam',
+    performance: 'Performance'
+  };
+  const student = studentsData.find(s => s.id == currentStudentId);
+  const modalTitle = document.getElementById('modalTitle');
+  if (modalTitle && student) modalTitle.textContent = `${componentNames[component]} Grading for ${student.name}`;
+  const modalBody = document.getElementById('modalBody');
+  if (modalBody && student) {
+    modalBody.innerHTML = `
+      <button class="btn" onclick="resetModalToGradingBreakdown()">Back to Grading Breakdown</button>
+      <table style="margin-top: 10px;">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Total Items</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${student.name || 'N/A'}</td>
+            <td><input type="number" placeholder="Total" value="${student[`total_${component}`] || (component === 'quiz' || component === 'exam' || component === 'attendance_score' ? '100' : '')}" /></td>
+            <td><input type="number" placeholder="Score" value="${student[component] || ''}" min="0" max="100" data-student-id="${student.id}" data-component="${component}" /></td>
+            <td><button class="btn" onclick="saveScoreFromModal('${student.id}', '${component}', this)">Save</button></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+  }
+}
+>>>>>>> REPLACE
+```
+
+```
+<<<<<<< SEARCH
+function populateEnrolledStudentsTable(students) {
+  const tbody = document.querySelector('#enrolledStudentsTable tbody');
+  tbody.innerHTML = '';
+  students.forEach(student => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.student_id || 'N/A'}</td>
+      <td>${student.name || 'N/A'}</td>
+      <td>${student.department || 'N/A'}</td>
+      <td>${student.year_level || 'N/A'}</td>
+      <td>
+        <button class="btn" onclick="openGradingModal('${student.id}')">Edit</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+=======
+function populateEnrolledStudentsTable(students) {
+  const tbody = document.querySelector('#enrolledStudentsTable tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  students.forEach(student => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.student_id || 'N/A'}</td>
+      <td>${student.name || 'N/A'}</td>
+      <td>${student.department || 'N/A'}</td>
+      <td>${student.year_level || 'N/A'}</td>
+      <td>
+        <button class="btn" onclick="openGradingModal('${student.id}')">Edit</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+>>>>>>> REPLACE
+```
+
+```
+<<<<<<< SEARCH
+function populateSummaryTable(students) {
+  const tbody = document.querySelector('.summary-section tbody');
+  const term = document.getElementById('term').value;
+  tbody.innerHTML = '';
+  students.forEach(student => {
+    // Calculate weighted scores
+    const quizWeighted = student.quiz && student.total_quiz ? ((student.quiz / student.total_quiz) * 100 * 0.10).toFixed(2) : '-';
+    const assignmentWeighted = student.assignment && student.total_assignment ? ((student.assignment / student.total_assignment) * 100 * 0.10).toFixed(2) : '-';
+    const attendanceWeighted = student.attendance_score && student.total_attendance_score ? ((student.attendance_score / student.total_attendance_score) * 100 * 0.10).toFixed(2) : '-';
+    const examWeighted = student.exam && student.total_exam ? ((student.exam / student.total_exam) * 100 * 0.30).toFixed(2) : '-';
+    const performanceWeighted = student.performance && student.total_performance ? ((student.performance / student.total_performance) * 100 * 0.40).toFixed(2) : '-';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.name || 'N/A'}</td>
+      <td>${quizWeighted}</td>
+      <td>${assignmentWeighted}</td>
+      <td>${attendanceWeighted}</td>
+      <td>${examWeighted}</td>
+      <td>${performanceWeighted}</td>
+      <td><strong>${typeof student.final_grade === 'number' ? student.final_grade.toFixed(2) : '-'}</strong></td>
+      <td><button class="btn save-btn" id="save-btn-${student.id}" style="display: ${student.is_done && term ? 'block' : 'none'};" onclick="saveFinalGrade('${student.id}')">Save</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+=======
+function populateSummaryTable(students) {
+  const summarySection = document.querySelector('.summary-section');
+  if (!summarySection) return;
+  const tbody = summarySection.querySelector('tbody');
+  if (!tbody) return;
+  const term = document.getElementById('term').value;
+  tbody.innerHTML = '';
+  students.forEach(student => {
+    // Calculate weighted scores
+    const quizWeighted = student.quiz && student.total_quiz ? ((student.quiz / student.total_quiz) * 100 * 0.10).toFixed(2) : '-';
+    const assignmentWeighted = student.assignment && student.total_assignment ? ((student.assignment / student.total_assignment) * 100 * 0.10).toFixed(2) : '-';
+    const attendanceWeighted = student.attendance_score && student.total_attendance_score ? ((student.attendance_score / student.total_attendance_score) * 100 * 0.10).toFixed(2) : '-';
+    const examWeighted = student.exam && student.total_exam ? ((student.exam / student.total_exam) * 100 * 0.30).toFixed(2) : '-';
+    const performanceWeighted = student.performance && student.total_performance ? ((student.performance / student.total_performance) * 100 * 0.40).toFixed(2) : '-';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.name || 'N/A'}</td>
+      <td>${quizWeighted}</td>
+      <td>${assignmentWeighted}</td>
+      <td>${attendanceWeighted}</td>
+      <td>${examWeighted}</td>
+      <td>${performanceWeighted}</td>
+      <td><strong>${typeof student.final_grade === 'number' ? student.final_grade.toFixed(2) : '-'}</strong></td>
+      <td><button class="btn save-btn" id="save-btn-${student.id}" style="display: ${student.is_done && term ? 'block' : 'none'};" onclick="saveFinalGrade('${student.id}')">Save</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+>>>>>>> REPLACE
+```
+
+```
+<<<<<<< SEARCH
+window.addEventListener('DOMContentLoaded', function() {
+  // Load saved subject, toggle view, date and time on page load
+  const savedSubjectId = localStorage.getItem('selectedSubjectId');
+  const savedToggleView = localStorage.getItem('selectedToggleView') || 'enrolled';
+  const savedDate = localStorage.getItem('selectedDate');
+  const savedTime = localStorage.getItem('selectedTime');
+
+  if (savedSubjectId) {
+    document.getElementById('subject').value = savedSubjectId;
+  }
+  if (savedDate) {
+    document.getElementById('date').value = savedDate;
+  }
+  if (savedTime) {
+    document.getElementById('time').value = savedTime;
+  }
+
+  loadSubjectDetails(savedToggleView);
+});
+=======
+window.addEventListener('DOMContentLoaded', function() {
+  // Load saved subject, toggle view, date and time on page load
+  const savedSubjectId = localStorage.getItem('selectedSubjectId');
+  const savedToggleView = localStorage.getItem('selectedToggleView') || 'enrolled';
+  const savedDate = localStorage.getItem('selectedDate');
+  const savedTime = localStorage.getItem('selectedTime');
+
+  if (savedSubjectId) {
+    const subjectElem = document.getElementById('subject');
+    if (subjectElem) subjectElem.value = savedSubjectId;
+  }
+  if (savedDate) {
+    const dateElem = document.getElementById('date');
+    if (dateElem) dateElem.value = savedDate;
+  }
+  if (savedTime) {
+    const timeElem = document.getElementById('time');
+    if (timeElem) timeElem.value = savedTime;
+  }
+
+  loadSubjectDetails(savedToggleView);
+});

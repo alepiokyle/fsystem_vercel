@@ -1,0 +1,222 @@
+/* Enhanced Sidebar Pop-up Toggle with Mantis Logo */
+:root {
+    --sidebar-expanded-width: 250px;
+    --sidebar-collapsed-width: 70px;
+    --mantis-logo-size: 40px;
+    --transition-duration: 0.3s;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #fff;
+    --border-color: #e9ecef;
+}
+
+/* Floating pop-up toggle button */
+.sidebar-popup-toggle {
+    position: fixed;
+    top: 20px;
+    left: var(--sidebar-expanded-width);
+    transform: translateX(-50%);
+    width: 35px;
+    height: 35px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-duration) ease;
+    z-index: 1001;
+    opacity: 0.8;
+}
+
+.sidebar-popup-toggle:hover {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Position when sidebar is collapsed */
+.sidebar-collapsed .sidebar-popup-toggle {
+    left: calc(var(--sidebar-collapsed-width) + 10px);
+}
+
+/* Icon rotation animation */
+.sidebar-popup-toggle i {
+    transition: transform var(--transition-duration) ease;
+}
+
+.sidebar-collapsed .sidebar-popup-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Mantis logo container */
+.mantis-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mantis-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-duration) ease;
+}
+
+.mantis-logo img {
+    width: var(--mantis-logo-size);
+    height: var(--mantis-logo-size);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.mantis-logo-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    transition: opacity var(--transition-duration) ease;
+}
+
+/* When sidebar is collapsed */
+.sidebar-collapsed .mantis-logo-text {
+    opacity: 0;
+    width: 0;
+}
+
+.sidebar-collapsed .mantis-logo {
+    justify-content: center;
+}
+
+/* Enhanced sidebar styling */
+.pc-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-expanded-width);
+    background: var(--background-color);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: width var(--transition-duration) ease;
+    z-index: 1000;
+    overflow-x: hidden;
+}
+
+.pc-sidebar.sidebar-collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+/* Navigation items */
+.pc-navbar {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.pc-item {
+    position: relative;
+}
+
+.pc-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all var(--transition-duration) ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.pc-link:hover {
+    background: #f8f9fa;
+    color: var(--primary-color);
+}
+
+/* Icon and text containers */
+.pc-micon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    transition: margin-right var(--transition-duration) ease;
+}
+
+.pc-mtext {
+    opacity: 1;
+    transition: opacity var(--transition-duration) ease, 
+                width var(--transition-duration) ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* When sidebar is collapsed */
+.sidebar-collapsed .pc-mtext {
+    opacity: 0;
+    width: 0;
+}
+
+.sidebar-collapsed .pc-micon {
+    margin-right: 0;
+}
+
+.sidebar-collapsed .pc-link {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+/* Tooltip for collapsed sidebar */
+.sidebar-collapsed .pc-item:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1002;
+    margin-left: 10px;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar-popup-toggle {
+        left: 50%;
+        top: 10px;
+    }
+    
+    .sidebar-collapsed .sidebar-popup-toggle {
+        left: 50%;
+    }
+}
+
+/* Animation classes */
+.sidebar-transition {
+    transition: width var(--transition-duration) ease;
+}
+
+.popup-transition {
+    transition: left var(--transition-duration) ease, 
+                opacity var(--transition-duration) ease;
+}
+
+/* Ensure proper z-index stacking */
+.pc-sidebar {
+    z-index: 1000;
+}
+
+.sidebar-popup-toggle {
+    z-index: 1001;
+}

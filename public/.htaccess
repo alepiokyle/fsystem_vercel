@@ -1,0 +1,60 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    # ---- Core Laravel front-controller routing ----
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}] 
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# ---- Security hardening ----
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Legacy browsers (safe to keep)
+    Header always set X-XSS-Protection "0"
+
+    # Baseline CSP (adjust 'frame-ancestors' if you embed the app)
+    # Note: Laravel may serve inline scripts depending on templates; start permissive then tighten.
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'" 
+</IfModule>
+
+# Block HTTP access to sensitive files/directories
+<IfModule mod_authz_core.c>
+    <FilesMatch "^(?i)(\.env|\.git|\.svn|composer\.(json|lock)|phpunit\.(xml|\.xml\.)|\.ht(access)?|env\.example|\.ssh)$">
+        Require all denied
+    </FilesMatch>
+
+    <DirectoryMatch "(?i)^/storage(/|$)">
+        Require all denied
+    </DirectoryMatch>
+
+    # Deny common sensitive paths even when referenced explicitly
+    RedirectMatch 403 "^/(?:\.env|\.git|\.github|\.gitlab|\.svn|composer\.json|composer\.lock|vendor|storage)(?:/|$)"
+</IfModule>
+
+# Extra: deny access to logs specifically (in addition to blocking /storage)
+<FilesMatch "(?i)laravel\.log$">
+    Require all denied
+</FilesMatch>
+

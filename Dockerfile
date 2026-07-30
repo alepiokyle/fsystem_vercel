@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies
+# Install system packages
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -26,31 +26,33 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy Composer files first (better Docker cache)
+# Copy composer files first
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies
+# Install dependencies WITHOUT running artisan scripts
 RUN composer install \
     --no-dev \
     --prefer-dist \
     --optimize-autoloader \
-    --no-interaction
+    --no-interaction \
+    --no-scripts
 
-# Copy project files
+# Copy the rest of the project
 COPY . .
 
-# Create .env if missing
-RUN cp .env.example .env || true
+# Create .env
+RUN cp .env.example .env
 
-# Generate Laravel APP_KEY
+# Generate key (don't fail if it can't)
 RUN php artisan key:generate --force || true
 
+# Run package discovery manually
+RUN php artisan package:discover --ansi || true
+
 # Fix permissions
-RUN mkdir -p storage bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache || true
 
 EXPOSE 10000
 

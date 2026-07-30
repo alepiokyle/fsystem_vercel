@@ -1,5 +1,6 @@
 FROM php:8.2-cli
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -26,28 +27,34 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
-
-RUN composer install \
-    --no-dev \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-interaction \
-    --no-scripts
-
+# Copy project files
 COPY . .
 
-RUN npm install && npm run build
+# Install PHP dependencies
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
-RUN php artisan package:discover --ansi || true
+# Install Node dependencies and build assets
+RUN npm install
+RUN npm run build
 
-RUN mkdir -p storage bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
+# Laravel permissions
+RUN mkdir -p storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
+# Cache configuration
+RUN php artisan config:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
+
+# Render provides the PORT environment variable
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+CMD php -S 0.0.0.0:${PORT:-10000} -t public

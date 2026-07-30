@@ -26,13 +26,13 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Working directory
 WORKDIR /var/www/html
 
 # Copy composer files first
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies (without artisan scripts)
+# Install dependencies
 RUN composer install \
     --no-dev \
     --prefer-dist \
@@ -40,19 +40,13 @@ RUN composer install \
     --no-interaction \
     --no-scripts
 
-# Copy the rest of the project
+# Copy the project
 COPY . .
 
-# Create .env
-RUN cp .env.example .env || true
-
-# Generate application key
-RUN php artisan key:generate --force || true
-
-# Run package discovery
+# Run Laravel package discovery
 RUN php artisan package:discover --ansi || true
 
-# Set permissions
+# Permissions
 RUN mkdir -p storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache || true
 

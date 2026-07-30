@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -26,12 +26,13 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Set working directory
 WORKDIR /var/www/html
 
 # Copy composer files first
 COPY composer.json composer.lock ./
 
-# Install dependencies WITHOUT running artisan scripts
+# Install PHP dependencies (without artisan scripts)
 RUN composer install \
     --no-dev \
     --prefer-dist \
@@ -43,16 +44,17 @@ RUN composer install \
 COPY . .
 
 # Create .env
-RUN cp .env.example .env
+RUN cp .env.example .env || true
 
-# Generate key (don't fail if it can't)
+# Generate application key
 RUN php artisan key:generate --force || true
 
-# Run package discovery manually
+# Run package discovery
 RUN php artisan package:discover --ansi || true
 
-# Fix permissions
-RUN chmod -R 775 storage bootstrap/cache || true
+# Set permissions
+RUN mkdir -p storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache || true
 
 EXPOSE 10000
 

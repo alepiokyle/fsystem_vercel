@@ -1,5 +1,6 @@
 FROM php:8.2-cli
 
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -26,12 +27,16 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Set working directory
 WORKDIR /var/www/html
 
+# Copy composer files first for better Docker caching
 COPY composer.json composer.lock ./
 
+# Install PHP dependencies
 RUN composer install \
     --no-dev \
     --prefer-dist \
@@ -39,15 +44,28 @@ RUN composer install \
     --no-interaction \
     --no-scripts
 
+# Copy application source
 COPY . .
 
-RUN npm install && npm run build
+# Install Node dependencies and build assets
+RUN npm install
+RUN npm run build
 
+# Ensure required Laravel directories exist
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
+# Set permissions
+RUN chmod -R 775 storage bootstrap/cache
+
+# Cache Laravel packages (won't fail build if .env isn't present)
 RUN php artisan package:discover --ansi || true
 
-RUN mkdir -p storage bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
-
+# Expose Render port
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Start Laravel using the Render-assigned PORT
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]

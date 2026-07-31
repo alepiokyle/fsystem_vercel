@@ -6,36 +6,34 @@ use App\Models\AdminAccount;
 use App\Models\AdminProfile;
 use App\Models\UserRole;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAccountSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure admin role exists (required by middleware)
+        // Ensure admin role exists
         UserRole::updateOrCreate(
             ['id' => 4],
             ['role' => 'Admin']
         );
 
-        // Create a profile row (admins_account.admins_profile_id is foreign key)
-        $profile = AdminProfile::create([
+        // Create or get profile row
+        $profile = AdminProfile::firstOrCreate([
             'first_name' => 'System',
-            'middle_name' => null,
             'last_name' => 'Admin',
         ]);
 
+        // Create or update PACAdmin account
         AdminAccount::updateOrCreate(
-            ['username' => 'admin'],
+            ['username' => 'PACAdmin'],
             [
-                'name' => 'System Admin',
+                'name' => 'PAC Admin',
                 'admins_profile_id' => $profile->id,
-                'password' => Hash::make('Admin12345'),
+                'password' => Hash::make('123456'), // Your preferred password
                 'user_role_id' => 4,
                 'is_active' => 1,
             ]
         );
     }
 }
-

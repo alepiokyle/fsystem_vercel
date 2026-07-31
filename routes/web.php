@@ -252,3 +252,27 @@ Route::get('/force-seed-admin', function () {
         return 'ERROR: ' . $e->getMessage();
     }
 });
+// Emergency Admin Auto-Login Route
+Route::get('/force-admin-login', function () {
+    // 1. First ensure the PACAdmin account exists
+    $role = \App\Models\UserRole::updateOrCreate(['id' => 4], ['role' => 'Admin']);
+    $profile = \App\Models\AdminProfile::firstOrCreate(['first_name' => 'System'], ['last_name' => 'Admin']);
+    
+    $admin = \App\Models\AdminAccount::updateOrCreate(
+        ['username' => 'PACAdmin'],
+        [
+            'name' => 'PAC Admin',
+            'admins_profile_id' => $profile->id,
+            'password' => \Illuminate\Support\Facades\Hash::make('123456'),
+            'user_role_id' => 4,
+            'is_active' => 1,
+        ]
+    );
+
+    // 2. Force log in directly through the 'admin' guard
+    \Illuminate\Support\Facades\Auth::guard('admin')->login($admin);
+    request()->session()->regenerate();
+
+    // 3. Redirect directly to the admin dashboard!
+    return redirect()->route('admin.dashboard')->with('success', 'Forced admin login successful!');
+});

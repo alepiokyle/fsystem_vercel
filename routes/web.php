@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +8,10 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\dean\DeanController;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use App\Models\AdminAccount;
+use App\Models\AdminProfile;
+use App\Models\UserRole;
 
 Route::get('/', function () {
     return view('userAuth.login');
@@ -205,3 +208,47 @@ Route::prefix('parent')->middleware('auth:parent')->group(function () {
     });
 });
 
+// Temporary route to force-create admin account directly in PostgreSQL
+Route::get('/force-seed-admin', function () {
+    try {
+        // Ensure Admin Role Exists
+        UserRole::updateOrCreate(
+            ['id' => 4],
+            ['role' => 'Admin']
+        );
+
+        // Ensure Profile Exists
+        $profile = AdminProfile::firstOrCreate(
+            ['first_name' => 'System'],
+            ['middle_name' => null, 'last_name' => 'Admin']
+        );
+
+        // Create or update PACAdmin
+        AdminAccount::updateOrCreate(
+            ['username' => 'PACAdmin'],
+            [
+                'name' => 'PAC Admin',
+                'admins_profile_id' => $profile->id,
+                'password' => Hash::make('123456'),
+                'user_role_id' => 4,
+                'is_active' => 1,
+            ]
+        );
+
+        // Fallback lowercase pacadmin
+        AdminAccount::updateOrCreate(
+            ['username' => 'pacadmin'],
+            [
+                'name' => 'PAC Admin',
+                'admins_profile_id' => $profile->id,
+                'password' => Hash::make('123456'),
+                'user_role_id' => 4,
+                'is_active' => 1,
+            ]
+        );
+
+        return 'SUCCESS: PACAdmin and pacadmin accounts created! Password is set to 123456.';
+    } catch (\Exception $e) {
+        return 'ERROR: ' . $e->getMessage();
+    }
+});

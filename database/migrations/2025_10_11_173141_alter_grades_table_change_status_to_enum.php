@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,13 +12,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Update existing statuses to match new ENUM values
-        \DB::statement("UPDATE grades SET status = 'draft' WHERE status = 'saved'");
-        \DB::statement("UPDATE grades SET status = 'submitted' WHERE status = 'pending'");
+        $driver = DB::getDriverName();
 
-        Schema::table('grades', function (Blueprint $table) {
-            $table->enum('status', ['draft', 'submitted', 'approved', 'rejected'])->default('draft')->change();
-        });
+        if ($driver === 'pgsql') {
+            // PostgreSQL specific syntax
+            DB::statement('ALTER TABLE grades DROP CONSTRAINT IF EXISTS grades_status_check;');
+            
+            // Convert column to varchar first if needed
+            DB::statement('ALTER TABLE grades ALTER COLUMN status TYPE VARCHAR(255);');
+            
+            // Add check constraint for enum values
+            DB::statement("ALTER TABLE grades ADD CONSTRAINT grades_status_check CHECK (status IN ('draft', 'submitted', 'approved', 'rejected'));");
+            
+            // Set default value
+            DB::statement("ALTER TABLE grades ALTER COLUMN status SET DEFAULT 'draft';");
+        } else {
+            // Standard MySQL behavior
+            Schema::table('grades', function (Blueprint $table) {
+                $table->enum('status', ['draft', 'submitted', 'approved', 'rejected'])
+                      ->default('draft')
+                      ->change();
+            });
+        }
     }
 
     /**
@@ -25,8 +41,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('grades', function (Blueprint $table) {
-            $table->string('status')->default('draft')->change();
-        });
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement('ALTER TABLE grades DROP CONSTRAINT IF EXISTS grades_status_check;');
+        } else {
+            Schema::table('grades', function (Blueprint $table) {
+                $table->string('status')->change();
+            });
+        }
     }
 };

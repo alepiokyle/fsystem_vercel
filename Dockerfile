@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies and PHP extensions
+# Install system dependencies and PHP extensions (added libpq-dev for Postgres)
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -15,10 +15,13 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         pdo \
         pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         zip \
         gd \
         bcmath \
@@ -59,7 +62,7 @@ RUN mkdir -p storage/framework/cache \
     bootstrap/cache
 
 # Set permissions
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache
 
 # Cache Laravel packages (won't fail build if .env isn't present)
 RUN php artisan package:discover --ansi || true
@@ -67,5 +70,5 @@ RUN php artisan package:discover --ansi || true
 # Expose Render port
 EXPOSE 10000
 
-# Start Laravel using the Render-assigned PORT
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+# Start Laravel and run migrations automatically
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]

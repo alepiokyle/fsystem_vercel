@@ -70,5 +70,5 @@ RUN php artisan package:discover --ansi || true
 # Expose Render port
 EXPOSE 10000
 
-# Start Laravel and run migrations automatically
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+# Start Laravel, run migrations and seed admin account
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --class=AdminAccountSeeder --force && php artisan serve --host=0.0.0.0 --host=0.0.0.0 --port=${PORT:-10000}"]

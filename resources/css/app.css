@@ -9,19 +9,6 @@
   }
 }
 
-/* Import responsive design files */
-@import './mobile-responsive.css';
-@import './sidebar-popup-fix.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Reset inputs on mobile to stop webkit zoom/oversizing */
-@layer base {
-  input, select, textarea {
-    background-color: #ffffff !important;
-    color: #1f2937 !important;
-    font-size: 14px;
-  }
-}

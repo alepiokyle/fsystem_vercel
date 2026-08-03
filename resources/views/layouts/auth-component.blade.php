@@ -13,8 +13,8 @@
     <title>{{ config('app.name', 'Laravel') }} - Login</title>
 
 
-    <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Styles (only JS - CSS loaded via separate tags to avoid Tailwind/Bootstrap conflicts) -->
+    @vite(['resources/js/app.js'])
 
    <!-- [Favicon] icon -->
     <link rel="icon" href="{{ asset('all/assets/images/remove.png')}}" type="image/x-icon"> <!-- [Google Font] Family -->

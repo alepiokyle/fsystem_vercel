@@ -34,9 +34,16 @@
     <link rel="stylesheet" href="{{ asset('all/assets/css/style.css')}}" id="main-style-link" >
     <link rel="stylesheet" href="{{ asset('all/assets/css/style-preset.css')}}" >
 
+    <!-- Dashboard-specific styles (no longer bundled with Vite to avoid conflicts) -->
+    <link rel="stylesheet" href="{{ asset('build/assets/app-CzkNTxgB.css') }}" id="vite-tailwind-css">
+    <link rel="stylesheet" href="{{ asset('resources/css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-popup-fix.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-popup-enhanced.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-shrink.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/dashboard-fixes.css') }}">
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
 
     <!-- Mobile Overlay for Sidebar -->
     <div class="mobile-overlay"></div>

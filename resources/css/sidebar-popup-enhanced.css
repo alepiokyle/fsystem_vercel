@@ -92,6 +92,79 @@
     justify-content: center;
 }
 
+/* EGC brand logo in sidebar - matches login page "eGrade Connect" animation */
+@keyframes egc-shine {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes egc-fadeSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.egc-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all var(--transition-duration) ease;
+    text-decoration: none;
+}
+
+.egc-logo-icon {
+    width: var(--mantis-logo-size);
+    height: var(--mantis-logo-size);
+    flex-shrink: 0;
+    transition: all var(--transition-duration) ease;
+}
+
+.egc-logo-text {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    /* Running sky-blue gradient - same as login page "eGrade Connect" */
+    background: linear-gradient(
+        90deg,
+        #2c3e50,
+        #4da9ff,
+        #7bd3ff,
+        #2c3e50
+    );
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    animation: egc-shine 3s linear infinite, egc-fadeSlide 1.2s ease-out forwards;
+
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity var(--transition-duration) ease, width var(--transition-duration) ease;
+}
+
+/* When sidebar is collapsed */
+.sidebar-collapsed .egc-logo-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.sidebar-collapsed .egc-brand {
+    justify-content: center;
+}
+
 /* Enhanced sidebar styling */
 .pc-sidebar {
     position: fixed;

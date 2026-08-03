@@ -73,8 +73,9 @@
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="{{ route('admin.dashboard') }}" class="b-brand text-primary">
-                    <img src="{{ asset('all/assets/images/logo-dark.svg') }}" class="img-fluid logo-lg" alt="Logo">
+                <a href="{{ route('admin.dashboard') }}" class="b-brand text-primary egc-brand">
+                    <img src="{{ asset('all/assets/images/logo-icon.svg') }}" class="egc-logo-icon" alt="Logo">
+                    <span class="egc-logo-text">EGC</span>
                 </a>
               
             </div>

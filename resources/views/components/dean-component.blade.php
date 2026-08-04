@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Dean Dashboard</title>
+    <title>{{ config('app.name', 'eGrade Connect') }} - Dean Dashboard</title>
 
 
     <!-- Styles -->
@@ -32,7 +32,13 @@
     <link rel="stylesheet" href="{{ asset('all/assets/fonts/material.css')}}" >
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ asset('all/assets/css/style.css')}}" id="main-style-link" >
-    <link rel="stylesheet" href="{{ asset('all/assets/css/style-preset.css')}}" >
+<link rel="stylesheet" href="{{ asset('all/assets/css/style-preset.css')}}" >
+
+    <!-- Dashboard-specific styles (loaded separately to avoid Vite/Tailwind conflicts with Bootstrap) -->
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-popup-enhanced.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-shrink.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/dashboard-fixes.css') }}">
 
 </head>
     <body>
@@ -56,7 +62,7 @@
                 <div class="m-header">
                     <a href="{{ route('Dean.deandashboard') }}" class="b-brand text-primary egc-brand">
                         <img src="{{ asset('all/assets/images/logo-icon.svg') }}" class="egc-logo-icon" alt="Logo">
-                        <span class="egc-logo-text">EGC</span>
+                    <span class="egc-logo-text">eGrade Connect</span>
                     </a>
                 </div>
                 @include('dean.partials.sidebar')

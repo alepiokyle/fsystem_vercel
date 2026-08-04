@@ -1,0 +1,63 @@
+/* Custom styles to prevent dashboard content from disappearing */
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+}
+
+.dashboard-main {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
+/* Ensure sidebar stays fixed */
+.sidebar-fixed {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Chart container responsive sizing */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Ensure content doesn't collapse */
+.content-stable {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fix for potential flexbox issues */
+.flex-stable {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .sidebar-fixed {
+        position: relative;
+        height: auto;
+        width: 100%;
+    }
+}

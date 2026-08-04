@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Student Dashboard</title>
+    <title>{{ config('app.name', 'eGrade Connect') }} - Student Dashboard</title>
 
 
     <!-- Styles -->
@@ -64,7 +64,7 @@
                 <div class="m-header">
                     <a href="{{ route('student.studentdashboard') }}" class="b-brand text-primary egc-brand">
                         <img src="{{ asset('all/assets/images/logo-icon.svg') }}" class="egc-logo-icon" alt="Logo">
-                        <span class="egc-logo-text">EGC</span>
+                    <span class="egc-logo-text">eGrade Connect</span>
                     </a>
                 </div>
                 @include('student.partials.sidebar')

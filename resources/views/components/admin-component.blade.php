@@ -14,7 +14,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config($tittle ?? 'FSY | Dashboard') }}</title>
+    <title>{{ config('app.name', 'eGrade Connect') }} | Dashboard</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('all/assets/images/favicon.svg') }}">
@@ -43,6 +43,13 @@
 
     <!-- Custom Styles -->
     @stack('styles')
+
+    <!-- Dashboard-specific styles (loaded separately to avoid Vite/Tailwind conflicts with Bootstrap) -->
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-popup-fix.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-popup-enhanced.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/sidebar-shrink.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('resources/css/dashboard-fixes.css') }}">
 </head>
 
 <body>
@@ -68,7 +75,7 @@
             <div class="m-header">
                 <a href="{{ route('admin.dashboard') }}" class="b-brand text-primary egc-brand">
                     <img src="{{ asset('all/assets/images/logo-icon.svg') }}" class="egc-logo-icon" alt="Logo">
-                    <span class="egc-logo-text">EGC</span>
+                    <span class="egc-logo-text">eGrade Connect</span>
                 </a>
               
             </div>

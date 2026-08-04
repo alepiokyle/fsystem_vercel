@@ -1,0 +1,116 @@
+/* Sidebar Popup Fix - Ensures popups follow sidebar behavior */
+:root {
+    --sidebar-expanded-width: 250px;
+    --sidebar-collapsed-width: 70px;
+}
+
+/* Main container for sidebar positioning */
+.sidebar-container {
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+/* Sidebar popup positioning */
+.sidebar-popup {
+    position: fixed;
+    z-index: 1050;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.sidebar-popup.active {
+    pointer-events: auto;
+}
+
+/* When sidebar is expanded */
+.sidebar-expanded .sidebar-popup {
+    left: calc(var(--sidebar-expanded-width) + 10px);
+}
+
+/* When sidebar is collapsed */
+.sidebar-collapsed .sidebar-popup {
+    left: calc(var(--sidebar-collapsed-width) + 10px);
+}
+
+/* Ensure dropdown menus follow sidebar */
+.pc-navbar .dropdown-menu {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    margin-top: 0 !important;
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+/* Position dropdown relative to sidebar state */
+.sidebar-expanded .pc-navbar .dropdown-menu {
+    left: var(--sidebar-expanded-width);
+}
+
+.sidebar-collapsed .pc-navbar .dropdown-menu {
+    left: var(--sidebar-collapsed-width);
+}
+
+/* Fix for submenu items */
+.pc-item.pc-hasmenu .pc-submenu {
+    position: fixed;
+    left: var(--sidebar-expanded-width);
+    top: auto;
+    transition: left 0.3s ease;
+}
+
+.sidebar-collapsed .pc-item.pc-hasmenu .pc-submenu {
+    left: var(--sidebar-collapsed-width);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar-popup,
+    .pc-navbar .dropdown-menu,
+    .pc-item.pc-hasmenu .pc-submenu {
+        position: absolute !important;
+        left: 100% !important;
+        top: 0 !important;
+        margin-left: 10px !important;
+    }
+}
+
+/* Animation classes */
+.sidebar-transition {
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.popup-transition {
+    transition: left 0.3s ease, opacity 0.3s ease;
+}
+
+/* Ensure proper z-index stacking */
+.pc-navbar {
+    position: relative;
+    z-index: 100;
+}
+
+.sidebar-popup,
+.dropdown-menu,
+.pc-submenu {
+    z-index: 1000;
+}
+
+/* Fix for mobile overlay */
+@media (max-width: 768px) {
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        display: none;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+}

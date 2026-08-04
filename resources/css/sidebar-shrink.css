@@ -18,6 +18,17 @@
     overflow-x: hidden;
 }
 
+/* Keep the sidebar white (original color) in ALL states, even when
+   minimized/shrunk, in mobile mode, or when the system is in dark mode */
+.pc-sidebar,
+.pc-sidebar.sidebar-shrink,
+.pc-sidebar.sidebar-collapsed,
+.pc-sidebar.mobile-show,
+.pc-sidebar .navbar-wrapper {
+    background: #fff !important;
+    background-color: #fff !important;
+}
+
 /* Expanded state */
 .pc-sidebar:not(.sidebar-shrink) {
     width: var(--sidebar-expanded-width);
